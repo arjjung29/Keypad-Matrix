@@ -1,4 +1,5 @@
 #include <Keypad.h>
+#include <SoftwareSerial.h>
 
 const byte ROWS = 4; // Four rows
 const byte COLS = 4; // Four columns
@@ -12,6 +13,7 @@ byte rowPins[ROWS] = {5, 4, 3, 2}; // Connect to the row pinouts of the keypad
 byte colPins[COLS] = {11, 10, 9, 8}; // Connect to the column pinouts of the keypad
 
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS); // Initializing the Keypad object
+SoftwareSerial GSM(7, 6); // SoftwareSerial(rxPin, txPin, inverse_logic), creating object for sending AT Commands to GSM Module
 
 String password = "1234"; // Default password
 String input = ""; //User's Input
@@ -20,12 +22,15 @@ int wrongAttempts = 0;
 
 void setup() {
   Serial.begin(9600); //Begin Serial communication for displaying in the Serial Monitor
+  GSM.begin(9600); //Begin Serial communication with GSM for sending AT commands
 }
 
 void loop() {
 
   if (wrongAttempts >= 4) { //Cross check with number of wrong attempts so far
     Serial.println("Too many wrong attempts! Please wait for 1 minute.");
+    Serial.println("Calling the Registered Phone Number !");
+    callup(); // Call the registered mobile number and hang up after 20 seconds
     delay(60000); // Delay of 1 minute
     wrongAttempts = 0; // Reset the wrong attempts counter
   }
@@ -89,4 +94,29 @@ void loop() {
     
 
   }
+}
+
+void update(){
+  delay(500);
+  while (Serial.available()) 
+  {
+    GSM.write(Serial.read()); //Forward what Serial received to Software Serial Port
+  }
+  while(GSM.available()) 
+  {
+    Serial.write(GSM.read()); //Forward what Software Serial received to Serial Port
+  }
+}
+
+void callup(){
+  Serial.println("Initializing..."); 
+  delay(1000);
+
+  GSM.println("AT"); // If initialization is success GSM Module will return "OK"
+  update();
+  GSM.println("ATD+ +916369727213;"); //  phone number to dial
+  update();
+  delay(20000); // wait for 20 seconds...
+  GSM.println("ATH"); //hang up the call
+  update();
 }

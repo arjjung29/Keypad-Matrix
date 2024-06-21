@@ -16,12 +16,20 @@ Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS); // Initi
 String password = "1234"; // Default password
 String input = ""; //User's Input
 int count = 0; //To loop over the user's input until the max length of password is reached
+int wrongAttempts = 0;
 
 void setup() {
   Serial.begin(9600); //Begin Serial communication for displaying in the Serial Monitor
 }
 
 void loop() {
+
+  if (wrongAttempts >= 4) { //Cross check with number of wrong attempts so far
+    Serial.println("Too many wrong attempts! Please wait for 1 minute.");
+    delay(60000); // Delay of 1 minute
+    wrongAttempts = 0; // Reset the wrong attempts counter
+  }
+
   char key = keypad.getKey();
   if (key) {
     if (key == 'A') { //Validation of your password or simply entering your password for access to be granted
@@ -41,6 +49,7 @@ void loop() {
         Serial.println("Password Matched!");
       } else {
         Serial.println("Password Incorrect!");
+        wrongAttempts++; //Incrementing the wrong attempt counter
       }
     }
     
@@ -74,6 +83,7 @@ void loop() {
         Serial.println("New Password Set!");
       } else {
         Serial.println("Password doesn't match!");
+        wrongAttempts++;
       }
     }
     

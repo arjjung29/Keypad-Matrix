@@ -1,6 +1,8 @@
 #include <Keypad.h>
 #include <SoftwareSerial.h>
 #include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
 
 #define SCREEN_WIDTH 128 
 #define SCREEN_HEIGHT 64 
@@ -40,16 +42,29 @@ void setup() {
 void loop() {
 
   if (wrongAttempts >= 4) { //Cross check with number of wrong attempts so far
+    display.clearDisplay();
+    display.setCursor(0,0);  
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.print("Too many wrong attempts! Please wait for 1 minute.");
     Serial.println("Too many wrong attempts! Please wait for 1 minute.");
+    display.setCursor(1,0);
+    display.print("Calling the Registered Phone Number !");
     Serial.println("Calling the Registered Phone Number !");
     callup(); // Call the registered mobile number and hang up after 20 seconds
     delay(60000); // Delay of 1 minute
     wrongAttempts = 0; // Reset the wrong attempts counter
+    display.clearDisplay();
   }
 
   char key = keypad.getKey();
   if (key) {
     if (key == 'A') { //Validation of your password or simply entering your password for access to be granted
+      display.clearDisplay();
+      display.setCursor(0,0);  
+      display.setTextSize(1);
+      display.setTextColor(WHITE);
+      display.print("Enter Password: ");
       Serial.println("Enter Password: ");
       input = ""; // for storing user's input
       count = 0;
@@ -64,13 +79,28 @@ void loop() {
       Serial.println();
       if (input == password) { // Checking for match (Validating)
         Serial.println("Password Matched!");
+        display.clearDisplay();
+        display.setCursor(0,0);  
+        display.setTextSize(1);
+        display.setTextColor(WHITE);
+        display.print("Password Matched !"); // printing to the OLED Display
       } else {
         Serial.println("Password Incorrect!");
+        display.clearDisplay();
+        display.setCursor(0,0);  
+        display.setTextSize(1);
+        display.setTextColor(WHITE);
+        display.print("Password Incorrect!");
         wrongAttempts++; //Incrementing the wrong attempt counter
       }
     }
     
     else if (key == 'B') { //Case for Resetting your password
+      display.clearDisplay();
+      display.setCursor(0,0);  
+      display.setTextSize(1);
+      display.setTextColor(WHITE);
+      display.print("Enter your old Password: ");
       Serial.println("Enter your old password: ");
       input = "";
       count = 0;
@@ -84,6 +114,11 @@ void loop() {
       }
       Serial.println();
       if (input == password) { //Validating if you're the previous person who set the last password
+        display.clearDisplay();
+        display.setCursor(0,0);  
+        display.setTextSize(1);
+        display.setTextColor(WHITE);
+        display.print("Password Reset Successfully! Enter your new password:");
         Serial.println("Password Reset Successfully! Enter your new password:"); // If success the user can enter their new password
         password = ""; // Clear the old password
         input = "";
@@ -98,8 +133,19 @@ void loop() {
         }
         Serial.println();
         Serial.println("New Password Set!");
+        display.clearDisplay();
+        display.setCursor(0,0);  
+        display.setTextSize(1);
+        display.setTextColor(WHITE);
+        display.print("New Password Set!");
+        
       } else {
         Serial.println("Password doesn't match!");
+        display.clearDisplay();
+        display.setCursor(0,0);  
+        display.setTextSize(1);
+        display.setTextColor(WHITE);
+        display.print("Password doesn't match");
         wrongAttempts++;
       }
     }

@@ -1,5 +1,11 @@
 #include <Keypad.h>
 #include <SoftwareSerial.h>
+#include <Wire.h>
+
+#define SCREEN_WIDTH 128 
+#define SCREEN_HEIGHT 64 
+#define OLED_RESET     -1 
+#define SCREEN_ADDRESS 0x3C
 
 const byte ROWS = 4; // Four rows
 const byte COLS = 4; // Four columns
@@ -14,6 +20,7 @@ byte colPins[COLS] = {11, 10, 9, 8}; // Connect to the column pinouts of the key
 
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS); // Initializing the Keypad object
 SoftwareSerial GSM(7, 6); // SoftwareSerial(rxPin, txPin, inverse_logic), creating object for sending AT Commands to GSM Module
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 String password = "1234"; // Default password
 String input = ""; //User's Input
@@ -23,6 +30,11 @@ int wrongAttempts = 0;
 void setup() {
   Serial.begin(9600); //Begin Serial communication for displaying in the Serial Monitor
   GSM.begin(9600); //Begin Serial communication with GSM for sending AT commands
+  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;); 
+  }
+  display.clearDisplay();
 }
 
 void loop() {

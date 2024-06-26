@@ -168,6 +168,21 @@ void loop() {
       }
     }
   }
+  /*else{
+   lcd.clear();
+   lcd.setCursor(0,0);
+   lcd.print("Press A for");
+   lcd.setCursor(0,1);
+   lcd.print("Validation");
+   delay(100);
+   lcd.clear();
+   lcd.setCursor(0,0);
+   lcd.print("Press B for");
+   lcd.setCursor(0,1);
+   lcd.print("Password Reset");
+   delay(100);
+
+  }*/
 }
 
 void update(){

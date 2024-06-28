@@ -1,3 +1,13 @@
+/*
+PROJECT TITLE:
+
+-----------------------AUTHENTICATION SYSTEM------------------------------------------------ 
+
+-----------------------CORE CONTRIBUTORS----------------------------------------------------
+- |Arjjun G            |B.Tech (Mechtronics Engineering) | Puducherry Technological University|
+--------------------------------------------------------------------------------------------
+*/
+
 #include <Keypad.h>
 #include <SoftwareSerial.h>
 #include <Wire.h>

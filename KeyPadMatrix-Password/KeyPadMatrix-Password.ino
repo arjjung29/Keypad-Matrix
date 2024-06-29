@@ -191,6 +191,7 @@ void loop() {
    lcd.setCursor(0,1);
    lcd.print("Password Reset");
    delay(100);
+   delay(1000);
 
   }*/
 }
